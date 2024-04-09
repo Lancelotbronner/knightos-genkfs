@@ -73,7 +73,7 @@ int parse_context(int argc, char **argv) {
 		return 1;
 	}
 	fseek(context.rom, 0L, SEEK_END);
-	uint32_t length = ftell(context.rom);
+	long length = ftell(context.rom);
 	fseek(context.rom, 0L, SEEK_SET);
 
 	context.dat_start = 0x04;
@@ -82,12 +82,12 @@ int parse_context(int argc, char **argv) {
 }
 
 char *concat_path(char* parent, char* child) {
-	int pl = strlen(parent);
-	int cl = strlen(child);
+	size_t pl = strlen(parent);
+	size_t cl = strlen(child);
 	if (parent[pl - 1] != '/') {
 		pl++;
 	}
-	int len = pl + cl;
+	size_t len = pl + cl;
 	char *a = malloc(len + 1);
 	memcpy(a, parent, pl);
 	memcpy(a + pl, child, cl);
@@ -117,7 +117,7 @@ void write_block(FILE *rom, FILE *file, uint16_t sectionId) {
 	uint16_t index = sectionId & 0xFF;
 	fseek(rom, flashPage * PAGE_LENGTH + index * BLOCK_SIZE, SEEK_SET);
 	uint8_t *block = malloc(BLOCK_SIZE);
-	int len = fread(block, 1, BLOCK_SIZE, file);
+	size_t len = fread(block, 1, BLOCK_SIZE, file);
 	fwrite(block, len, 1, rom);
 	fflush(rom);
 	free(block);
